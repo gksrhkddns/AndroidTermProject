@@ -18,7 +18,7 @@
         <ImageButton
             android:layout_width="61dp"
             android:layout_height="50dp"
-            android:id="@+id/camerabutton"
+            android:id="@+id/menubutton"
             android:background="@drawable/cameraicon"
             android:layout_gravity="right" />
     </LinearLayout>
@@ -82,7 +82,7 @@
         <ImageButton
             android:layout_width="61dp"
             android:layout_height="51dp"
-            android:id="@+id/imageButton5"
+            android:id="@+id/camerabutton"
             android:background="@drawable/cameraicon"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>

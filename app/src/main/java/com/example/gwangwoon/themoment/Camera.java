@@ -23,7 +23,7 @@ public class Camera extends Activity implements OnClickListener
 
     private Uri mImageCaptureUri;
     private ImageView mPhotoImageView;
-    private Button mButton;
+    //private Button mButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -31,10 +31,11 @@ public class Camera extends Activity implements OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
 
-        mButton = (Button) findViewById(R.id.button);
+        //mButton = (Button) findViewById(R.id.button);
         mPhotoImageView = (ImageView) findViewById(R.id.image);
 
-        mButton.setOnClickListener(this);
+       // mButton.setOnClickListener(this);
+        doTakePhotoAction();
     }
 
     /**
@@ -60,19 +61,20 @@ public class Camera extends Activity implements OnClickListener
         // 특정기기에서 사진을 저장못하는 문제가 있어 다음을 주석처리 합니다.
         //intent.putExtra("return-data", true);
         startActivityForResult(intent, PICK_FROM_CAMERA);
+
     }
 
     /**
      * 앨범에서 이미지 가져오기
      */
-    private void doTakeAlbumAction()
+ /*   private void doTakeAlbumAction()
     {
         // 앨범 호출
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent, PICK_FROM_ALBUM);
     }
-
+*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -92,6 +94,7 @@ public class Camera extends Activity implements OnClickListener
 
                 if(extras != null)
                 {
+
                     Bitmap photo = extras.getParcelable("data");
                     mPhotoImageView.setImageBitmap(photo);
                 }
@@ -106,13 +109,14 @@ public class Camera extends Activity implements OnClickListener
                 break;
             }
 
-            case PICK_FROM_ALBUM:
+         /*   case PICK_FROM_ALBUM:
             {
                 // 이후의 처리가 카메라와 같으므로 일단  break없이 진행합니다.
                 // 실제 코드에서는 좀더 합리적인 방법을 선택하시기 바랍니다.
 
                 mImageCaptureUri = data.getData();
             }
+            */
 
             case PICK_FROM_CAMERA:
             {
@@ -138,7 +142,7 @@ public class Camera extends Activity implements OnClickListener
     @Override
     public void onClick(View v)
     {
-        DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener()
+       /* DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialog, int which)
@@ -171,4 +175,5 @@ public class Camera extends Activity implements OnClickListener
                 .setNeutralButton("앨범선택", albumListener)
                 .setNegativeButton("취소", cancelListener)
                 .show();
+                */
     }}
