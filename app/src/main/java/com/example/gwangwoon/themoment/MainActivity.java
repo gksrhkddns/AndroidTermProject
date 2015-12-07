@@ -1,7 +1,10 @@
 package com.example.gwangwoon.themoment;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
@@ -9,6 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
@@ -17,7 +21,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
+import static com.example.gwangwoon.themoment.Constants.TABLE_NAME;
+import static com.example.gwangwoon.themoment.Constants.TIME;
+import static com.example.gwangwoon.themoment.Constants.TITLE;
+import static com.example.gwangwoon.themoment.Constants.MEMO;
+import static com.example.gwangwoon.themoment.Constants.PHOTO;
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
@@ -27,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
     private static final int CROP_FROM_CAMERA = 2;
+
+    private int dbVersion =1;
+    private Intent i;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +48,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         ImageButton videoButton =(ImageButton) findViewById(R.id.videocamerabutton);
         videoButton.setOnClickListener(this);
         ImageButton pencilButton =(ImageButton) findViewById(R.id.pencilbutton);
-        //cameraButton.setOnClickListener(this);
+        pencilButton.setOnClickListener(this);
         ImageButton recordingButton =(ImageButton) findViewById(R.id.recordingbutton);
         //cameraButton.setOnClickListener(this);
-
+        Log.d("adf",getFilesDir().getAbsolutePath().toString());
 
     }
 
@@ -51,13 +62,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         switch(v.getId()){
             case R.id.camerabutton:
-                Intent i = new Intent(this, temp.class);
-               startActivity(i);
-                doTakePhotoAction();
+                i = new Intent(this, Camera.class);
+                startActivity(i);
                 break;
             case R.id.videocamerabutton:
-                 i = new Intent(this, Camera.class);
+                i = new Intent(this, Show.class);
                 startActivity(i);
+                break;
+            case R.id.pencilbutton:
                 break;
         }
     }
@@ -156,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -170,4 +183,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

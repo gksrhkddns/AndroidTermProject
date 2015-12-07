@@ -11,7 +11,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/date"
+            android:id="@+id/date1"
             android:layout_gravity="start"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/image1"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_margin="50dp"
@@ -47,10 +47,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.77">
 
-        <EditText
+        <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/editText1"/>
+            android:id="@+id/memotext"/>
 
     </LinearLayout>
 
@@ -60,14 +60,8 @@
         android:layout_height="33dp"
         android:layout_weight="0.15">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="저장하기"
-            android:id="@+id/SaveButton"
-            android:layout_gravity="center_horizontal" />
+
     </LinearLayout>
 
 
 </LinearLayout>
-

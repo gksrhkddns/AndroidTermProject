@@ -11,7 +11,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/date"
+            android:id="@+id/date1"
             android:layout_gravity="start"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
@@ -20,19 +20,18 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/editText" />
+            android:id="@+id/editText1" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="300dp">
 
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="match_parent"
+        <VideoView
+            android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:layout_margin="50dp"
-            android:background="#eee" />
+            android:id="@+id/videoView" />
     </LinearLayout>
 
     <ViewSwitcher
@@ -49,8 +48,7 @@
 
         <EditText
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/editText1"/>
+            android:layout_height="fill_parent" />
 
     </LinearLayout>
 
@@ -64,10 +62,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="저장하기"
-            android:id="@+id/SaveButton"
+            android:id="@+id/SaveButton1"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
 
 </LinearLayout>
-
