@@ -23,6 +23,9 @@
         <activity android:name=".Show"></activity>
         <activity android:name=".Camera"></activity>
         <activity android:name=".Video"></activity>
+        <activity android:name=".Calendar"></activity>
+        <activity android:name=".listView"></activity>
+        <activity android:name=".Write"></activity>
     </application>
 
 </manifest>

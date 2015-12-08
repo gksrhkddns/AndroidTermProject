@@ -50,8 +50,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         ImageButton pencilButton =(ImageButton) findViewById(R.id.pencilbutton);
         pencilButton.setOnClickListener(this);
         ImageButton recordingButton =(ImageButton) findViewById(R.id.recordingbutton);
+        ImageButton menuButton = (ImageButton)findViewById(R.id.menubutton);
+        menuButton.setOnClickListener(this);
         //cameraButton.setOnClickListener(this);
-        Log.d("adf",getFilesDir().getAbsolutePath().toString());
+
 
     }
 
@@ -70,6 +72,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 startActivity(i);
                 break;
             case R.id.pencilbutton:
+                i = new Intent(this, Write.class);
+                startActivity(i);
+                break;
+            case R.id.menubutton:
+                i = new Intent(this, Calendar.class);
+                startActivity(i);
                 break;
         }
     }

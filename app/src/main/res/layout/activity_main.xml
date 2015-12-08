@@ -12,14 +12,15 @@
         android:layout_height="40dp"
         android:weightSum="1"
         android:id="@+id/linearLayout2"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true">
+
 
         <ImageButton
             android:layout_width="61dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:id="@+id/menubutton"
-            android:background="@drawable/cameraicon"
+            android:background="@drawable/redmenuicon"
             android:layout_gravity="right" />
     </LinearLayout>
 

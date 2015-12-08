@@ -9,6 +9,7 @@ import static com.example.gwangwoon.themoment.Constants.MEMO;
 import static com.example.gwangwoon.themoment.Constants.PHOTO;
 import static com.example.gwangwoon.themoment.Constants.TABLE_NAME;
 import static com.example.gwangwoon.themoment.Constants.TIME;
+import static com.example.gwangwoon.themoment.Constants.TITLE;
 
 /**
  * Created by Gwangwoon on 2015-12-03.
@@ -26,7 +27,7 @@ public class EventsData extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db){
         db.execSQL("CREATE TABLE " + TABLE_NAME + " (" + _ID
                 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TIME + " TEXT, "
-                + PHOTO + " BLOB, " + MEMO + " TEXT);" );
+                + TITLE +" TEXT, "+  PHOTO + " BLOB, " + MEMO + " TEXT);" );
 
     }
 

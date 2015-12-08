@@ -11,16 +11,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/date_show"
+            android:id="@+id/date_write"
             android:layout_gravity="start"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             />
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText" />
     </LinearLayout>
 
     <LinearLayout
@@ -36,7 +32,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:id="@+id/titleView_show"
+                android:id="@+id/titleView_write"
                 android:layout_gravity="start"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
@@ -49,46 +45,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/title_show"
-                android:textSize="30dp" />
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/title_write"
+                android:textSize="20dp" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/image_show"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="#eee"
-            android:layout_margin="25dp" />
-    </LinearLayout>
-
-    <ViewSwitcher
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/viewSwitcher"
-        android:layout_gravity="center_horizontal" />
-
-    <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.67"
         android:weightSum="1">
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/memo_show"
-            android:layout_weight="0.67"
-            android:typeface="serif"
+            android:id="@+id/memo_write"
+            android:typeface="monospace"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:textSize="15dp" />
@@ -101,6 +77,12 @@
         android:layout_height="33dp"
         android:layout_weight="0.15">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="저장하기"
+            android:id="@+id/SaveButton_write"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
 

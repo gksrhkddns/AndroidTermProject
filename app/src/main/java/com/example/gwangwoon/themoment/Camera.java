@@ -53,6 +53,7 @@ public class Camera extends Activity implements OnClickListener
     private ImageView mPhotoImageView;
     private TextView Datepick;
     private EditText content;
+    private EditText title;
     private Button saveButton;
     private Bitmap photo;
     private String strDate;
@@ -61,6 +62,7 @@ public class Camera extends Activity implements OnClickListener
     String imageSaveUri;
     Uri uri;
     private int dbVersion =1;
+    String mtitle;
     //private Button mButton;
 
     @Override
@@ -71,13 +73,13 @@ public class Camera extends Activity implements OnClickListener
 
         events = new EventsData(this);
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.DD HH:MM", java.util.Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm", java.util.Locale.getDefault());
         strDate = dateFormat.format(date);
         Datepick =(TextView)findViewById(R.id.date);
         Datepick.setText(strDate);
 
         content = (EditText)findViewById(R.id.editText1);
-
+        title = (EditText)findViewById(R.id.editText2);
         //mButton = (Button) findViewById(R.id.button);
         mPhotoImageView = (ImageView) findViewById(R.id.image);
 
@@ -151,12 +153,12 @@ public class Camera extends Activity implements OnClickListener
 
                 }
 
-                // 임시 파일 삭제
-                 //   File f = new File(mImageCaptureUri.getPath());
-             //   if(f.exists())
-              //  {
-              //      f.delete();
-              // }
+                //임시 파일 삭제
+                   File f = new File(mImageCaptureUri.getPath());
+                if(f.exists())
+                {
+                    f.delete();
+               }
 
                 break;
             }
@@ -188,8 +190,8 @@ public class Camera extends Activity implements OnClickListener
                 Intent intent = new Intent("com.android.camera.action.CROP");
                 intent.setDataAndType(mImageCaptureUri, "image/*");
 
-                intent.putExtra("outputX", 90);
-                intent.putExtra("outputY", 90);
+                intent.putExtra("outputX", 200);
+                intent.putExtra("outputY", 200);
                 intent.putExtra("aspectX", 1);
                 intent.putExtra("aspectY", 1);
                 intent.putExtra("scale", true);
@@ -210,15 +212,18 @@ public class Camera extends Activity implements OnClickListener
                sPhoto =  mImageCaptureUri.getPath();
                 Log.d("보자", sPhoto);
                 memo = content.getText().toString();
-               addEvent(strDate,photo , memo);
-
+                mtitle = title.getText().toString();
+               addEvent(strDate,mtitle,photo , memo);
+              Toast.makeText(getBaseContext(), "저장되었습니다.",
+                      Toast.LENGTH_LONG).show();
+              finish();
               break;
 
 
               }
       }
 
-    private void addEvent(String strDate, Bitmap photo, String memo){
+    private void addEvent(String strDate,String title, Bitmap photo, String memo){
         long ret = 0;
         SQLiteDatabase db = events.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -228,6 +233,7 @@ public class Camera extends Activity implements OnClickListener
         byte[] imageInByte = stream.toByteArray();
 
         values.put(TIME, strDate);
+        values.put(TITLE, title);
         values.put(PHOTO, imageInByte);
         values.put(MEMO, memo);
          db.insertOrThrow(TABLE_NAME, null, values);
