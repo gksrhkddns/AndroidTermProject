@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 startActivity(i);
                 break;
             case R.id.videocamerabutton:
-                i = new Intent(this, Show.class);
+                i = new Intent(this, Video.class);
                 startActivity(i);
                 break;
             case R.id.pencilbutton:

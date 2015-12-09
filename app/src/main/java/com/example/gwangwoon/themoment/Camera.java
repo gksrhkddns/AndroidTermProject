@@ -88,8 +88,8 @@ public class Camera extends Activity implements OnClickListener
         saveButton.setOnClickListener(this);
 
 
-      //doTakeAlbumAction();
-     doTakePhotoAction();
+        //doTakeAlbumAction();
+        doTakePhotoAction();
 
 
 
@@ -103,32 +103,22 @@ public class Camera extends Activity implements OnClickListener
 
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        // 임시로 사용할 파일의 경로를 생성
         String url = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
-        mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), url));
-        Log.d("처음 사진찍었을때 uri", mImageCaptureUri.toString());
+
+        mImageCaptureUri = Uri.fromFile(new File(getExternalFilesDir(null), url));
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-        // 특정기기에서 사진을 저장못하는 문제가 있어 다음을 주석처리 합니다.
-        //intent.putExtra("return-data", true);
+
         startActivityForResult(intent, PICK_FROM_CAMERA);
 
     }
 
-    /**
-     * 앨범에서 이미지 가져오기
-     */
-    private void doTakeAlbumAction()
-    {
-        // 앨범 호출
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-        startActivityForResult(intent, PICK_FROM_ALBUM);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+      
+      
+
         if(resultCode != RESULT_OK)
         {
             return;
@@ -149,39 +139,22 @@ public class Camera extends Activity implements OnClickListener
 
                     photo = extras.getParcelable("data");
 
-                  mPhotoImageView.setImageBitmap(photo);
+                    mPhotoImageView.setImageBitmap(photo);
+                    mPhotoImageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
                 }
 
                 //임시 파일 삭제
-                   File f = new File(mImageCaptureUri.getPath());
+                File f = new File(mImageCaptureUri.getPath());
                 if(f.exists())
                 {
                     f.delete();
-               }
+                }
 
                 break;
             }
 
-       /*   case PICK_FROM_ALBUM:
-            {
-                // 이후의 처리가 카메라와 같으므로 일단  break없이 진행합니다.
-                // 실제 코드에서는 좀더 합리적인 방법을 선택하시기 바랍니다.
-
-                mImageCaptureUri = data.getData();
-                Log.d("앨범가져오기 uri", mImageCaptureUri.toString()+".jpg");
-                Bitmap photo;
-
-                mPhotoImageView.setImageURI(null);
-                mPhotoImageView.setImageURI(mImageCaptureUri);
-
-              //  Bitmap rPhoto = getImageBitmap(mImageCaptureUri.toString());
-            //   mPhotoImageView.setImageBitmap(rPhoto);
-
-                break;
-            }
-
-*/
+   
             case PICK_FROM_CAMERA:
             {
                 // 이미지를 가져온 이후의 리사이즈할 이미지 크기를 결정합니다.
@@ -201,27 +174,28 @@ public class Camera extends Activity implements OnClickListener
                 break;
             }
         }
+
     }
 
     @Override
     public void onClick(View v)
     {
 
-      switch(v.getId()){
-          case R.id.SaveButton:
-               sPhoto =  mImageCaptureUri.getPath();
+        switch(v.getId()){
+            case R.id.SaveButton:
+                sPhoto =  mImageCaptureUri.getPath();
                 Log.d("보자", sPhoto);
                 memo = content.getText().toString();
                 mtitle = title.getText().toString();
-               addEvent(strDate,mtitle,photo , memo);
-              Toast.makeText(getBaseContext(), "저장되었습니다.",
-                      Toast.LENGTH_LONG).show();
-              finish();
-              break;
+                addEvent(strDate,mtitle,photo , memo);
+                Toast.makeText(getBaseContext(), "저장되었습니다.",
+                        Toast.LENGTH_LONG).show();
+                finish();
+                break;
 
 
-              }
-      }
+        }
+    }
 
     private void addEvent(String strDate,String title, Bitmap photo, String memo){
         long ret = 0;
@@ -236,7 +210,7 @@ public class Camera extends Activity implements OnClickListener
         values.put(TITLE, title);
         values.put(PHOTO, imageInByte);
         values.put(MEMO, memo);
-         db.insertOrThrow(TABLE_NAME, null, values);
+        db.insertOrThrow(TABLE_NAME, null, values);
 
 
     }
@@ -264,4 +238,4 @@ public class Camera extends Activity implements OnClickListener
     public String getStrDate(){return strDate;}
 
     public Bitmap getPhoto(){return photo;}
-    }
+}

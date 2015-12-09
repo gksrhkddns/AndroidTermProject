@@ -1,4 +1,5 @@
 package com.example.gwangwoon.themoment;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -6,13 +7,18 @@ import java.util.Date;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.media.session.MediaController;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -22,102 +28,140 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+
 import org.w3c.dom.Text;
 
-public class Video extends Activity  {
+import static com.example.gwangwoon.themoment.Constants.DIRECTORY;
+import static com.example.gwangwoon.themoment.Constants.MEMO;
+import static com.example.gwangwoon.themoment.Constants.PHOTO;
+import static com.example.gwangwoon.themoment.Constants.TABLE_NAME;
+import static com.example.gwangwoon.themoment.Constants.TIME;
+import static com.example.gwangwoon.themoment.Constants.TITLE;
 
-    private static final int PICK_FROM_VIDEO = 0;
+public class Video extends Activity  implements OnClickListener {
+
+    private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
-    private static final int CROP_FROM_VIDEO = 2;
+    private static final int CROP_FROM_CAMERA = 2;
 
+    private VideoData videoData;
     private Uri mVideoCaptureUri;
-    private VideoView mVideoView;
+    VideoView videoView;
     private TextView Datepick;
     private EditText content;
+    private EditText title;
     private Button saveButton;
-    private Bitmap photo;
     private String strDate;
-    private String contents;
+    private String memo,mtitle;
+    Video video;
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        doTakeVideoAction();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video);
+
+
+        videoData = new VideoData(this);
+
+
+
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.DD HH:MM", java.util.Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm", java.util.Locale.getDefault());
         strDate = dateFormat.format(date);
-        Datepick =(TextView)findViewById(R.id.date1);
+        Datepick = (TextView) findViewById(R.id.date_video);
         Datepick.setText(strDate);
 
-        content = (EditText)findViewById(R.id.editText1);
-        contents = content.getText().toString();
-        contents = contents.replace("'","''");
+        content = (EditText) findViewById(R.id.editText1_video);
+        title = (EditText) findViewById(R.id.editText2_video);
         //mButton = (Button) findViewById(R.id.button);
-      //  mVideoView = (ImageView) findViewById(R.id.image);
 
-        saveButton = (Button) findViewById(R.id.SaveButton1);
-        // mButton.setOnClickListener(this);
-        //saveButton.setOnClickListener(this);
-        doTakeVideoAction();
+
+        saveButton = (Button) findViewById(R.id.SaveButton_video);
+
+        saveButton.setOnClickListener(this);
+
+        videoView = (VideoView) findViewById(R.id.videoView);
+        videoView.setVideoURI(mVideoCaptureUri);
+        videoView.requestFocus();
+        videoView.start();
+        videoView.setZOrderOnTop(true);
+
+        videoView.setMediaController(new android.widget.MediaController(this));
+
+
+    }
+    @Override
+
+    public void onClick(View v){ switch(v.getId()){
+
+        case R.id.SaveButton_video:
+
+
+            memo = content.getText().toString();
+            mtitle = title.getText().toString();
+            Log.d("시간", strDate);
+            Log.d("제목", mtitle);
+            Log.d("동영상", mVideoCaptureUri.toString());
+            Log.d("메모", memo);
+           addEvent(strDate,mtitle,mVideoCaptureUri , memo);
+            Toast.makeText(getBaseContext(), "저장되었습니다.",
+                    Toast.LENGTH_LONG).show();
+            finish();
+            break;
+
+
+    }
 
     }
     private void doTakeVideoAction()
     {
 
 
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        Intent intent = new Intent("android.media.action.VIDEO_CAPTURE");
+        String url ="tmp_" + String.valueOf(System.currentTimeMillis()) + ".mp4";
+       //mVideoCaptureUri = Uri.parse("android.resource://" + getPackageName() + "/" + "R.raw." + url);
 
-        // 임시로 사용할 파일의 경로를 생성
-        String url = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".mp4";
-        mVideoCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), url));
-
+        mVideoCaptureUri = Uri.fromFile(new File(getExternalFilesDir(null), url));
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mVideoCaptureUri);
-        // 특정기기에서 사진을 저장못하는 문제가 있어 다음을 주석처리 합니다.
-        //intent.putExtra("return-data", true);
-        startActivityForResult(intent, CROP_FROM_VIDEO);
 
+        startActivityForResult(intent, CROP_FROM_CAMERA);
     }
+
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if(resultCode != RESULT_OK)
-        {
-            return;
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode ==RESULT_OK){
+            if(requestCode == CROP_FROM_CAMERA){
+             //   Uri uri = data.getData();
+                //mVideoCaptureUri = data.getData();
+                Log.d("데이터", mVideoCaptureUri.toString());
+
+
+
+            }
         }
 
-        switch(requestCode)
-        {
-            case CROP_FROM_VIDEO:
-            {
-                // 크롭이 된 이후의 이미지를 넘겨 받습니다.
-                // 이미지뷰에 이미지를 보여준다거나 부가적인 작업 이후에
-                // 임시 파일을 삭제합니다.
-                final Bundle extras = data.getExtras();
+    }
 
-                    mVideoView.setVideoURI(mVideoCaptureUri);
-                // 임시 파일 삭제
-                File f = new File(mVideoCaptureUri.getPath());
-                if(f.exists())
-                {
-                    f.delete();
-                }
-
-                break;
-            }
-
-         /*   case PICK_FROM_ALBUM:
-            {
-                // 이후의 처리가 카메라와 같으므로 일단  break없이 진행합니다.
-                // 실제 코드에서는 좀더 합리적인 방법을 선택하시기 바랍니다.
-
-                mImageCaptureUri = data.getData();
-            }
-            */
+    private void addEvent(String strDate,String title, Uri uri, String memo){
+        long ret = 0;
+       SQLiteDatabase db = videoData.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
 
-        }
+        values.put(TIME, strDate);
+        values.put(TITLE, title);
+        values.put(DIRECTORY, uri.toString() );
+        values.put(MEMO, memo);
+        db.insertOrThrow(TABLE_NAME, null, values);
+
+
     }
 
 
-    /**
-     * 카메라에서 이미지 가져오기
-     */
 }

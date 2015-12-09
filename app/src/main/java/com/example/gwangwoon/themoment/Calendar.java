@@ -1,6 +1,8 @@
 package com.example.gwangwoon.themoment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,9 +11,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,9 +26,12 @@ import java.util.Date;
 /**
  * Created by Gwangwoon on 2015-12-08.
  */
-public class Calendar extends Activity {
+public class Calendar extends Activity implements View.OnClickListener {
     CalendarView cal;
     String date;
+    private ImageButton menuButton;
+    private ImageButton settingButton;
+    private ImageButton searchButton;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +39,14 @@ public class Calendar extends Activity {
 
         cal = (CalendarView) findViewById(R.id.calendarView);
         cal.setShowWeekNumber(false);
+        menuButton =(ImageButton)findViewById(R.id.menubutton_calendar);
+        menuButton.setOnClickListener(this);
+
+        settingButton =(ImageButton)findViewById(R.id.settingbutton_calendar);
+        settingButton.setOnClickListener(this);
+
+        searchButton = (ImageButton)findViewById(R.id.searchbutton_calendar);
+        searchButton.setOnClickListener(this);
 
         cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
@@ -55,6 +70,31 @@ public class Calendar extends Activity {
 
     }
 
+
+    public void onClick(View v){
+
+        switch(v.getId()) {
+            case R.id.menubutton_calendar:
+                finish();
+                break;
+            case R.id.settingbutton_calendar:
+                AlertDialog alertDialog = new AlertDialog.Builder(Calendar.this).create();
+                alertDialog.setTitle("The Moment");
+                alertDialog.setMessage("현재 버전 1.0.0" + "\n" + "개발자 : 한광운");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+                break;
+            case R.id.searchbutton_calendar:
+                Intent intent = new Intent(this, SearchView.class);
+                startActivity(intent);
+                break;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

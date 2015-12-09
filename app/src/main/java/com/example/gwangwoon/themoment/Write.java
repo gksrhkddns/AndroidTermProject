@@ -114,7 +114,7 @@ public class Write extends Activity  implements View.OnClickListener {
 
         values.put(TIME, strDate);
         values.put(TITLE, title);
-        values.put(PHOTO, "");
+       // values.put(PHOTO, "");
         values.put(MEMO, memo);
         db.insertOrThrow(TABLE_NAME, null, values);
 

@@ -14,6 +14,6 @@ public interface Constants extends BaseColumns{
     public static final String TITLE = "title";
     public static final String MEMO = "memo";
     public static final String PHOTO ="photo";
-    public static final String AUTHORITY ="org.example.events";
-    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
+    public static final String TYPE ="type";
+    public static final String DIRECTORY = "directory";
 }
