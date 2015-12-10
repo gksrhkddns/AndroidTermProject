@@ -6,6 +6,14 @@
         android:name="android.permission.CAMERA" />
     <user-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <user-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <user-permission
+        android:name="android.permission.WRITE_INTERNAL_STORAGE"/>
+    <user-permission
+        android:name="android.permission.READ_INTERNAL_STORAGE"/>
+    <user-permission
+        android:name="android.permission.STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -20,12 +28,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".Show"></activity>
         <activity android:name=".Camera"></activity>
         <activity android:name=".Video"></activity>
         <activity android:name=".Calendar"></activity>
         <activity android:name=".listView"></activity>
         <activity android:name=".Write"></activity>
+        <activity android:name=".VideoShow"></activity>
+        <activity android:name=".Pencilshow"></activity>
+        <activity android:name=".SearchView"></activity>
+        <activity android:name=".temp"></activity>
     </application>
 
 </manifest>

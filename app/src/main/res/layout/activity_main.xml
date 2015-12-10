@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/background"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+   >
 
     <LinearLayout
         android:orientation="vertical"
@@ -16,12 +17,6 @@
         android:layout_alignParentBottom="true">
 
 
-        <ImageButton
-            android:layout_width="61dp"
-            android:layout_height="40dp"
-            android:id="@+id/menubutton"
-            android:background="@drawable/redmenuicon"
-            android:layout_gravity="right" />
     </LinearLayout>
 
     <LinearLayout
@@ -35,25 +30,25 @@
 
         <ImageButton
             android:layout_width="61dp"
-            android:layout_height="51dp"
-            android:id="@+id/pencilbutton"
-            android:background="@drawable/pencilicon"
+            android:layout_height="40dp"
+            android:id="@+id/menubutton"
+            android:background="@drawable/redmenuicon"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="71dp"
-        android:layout_above="@+id/linearLayout3"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/linearLayout4">
+        android:id="@+id/linearLayout4"
+        android:layout_above="@+id/linearLayout3">
 
         <ImageButton
             android:layout_width="61dp"
-            android:layout_height="51dp"
-            android:id="@+id/recordingbutton"
-            android:background="@drawable/recording"
+            android:layout_height="40dp"
+            android:id="@+id/pencilbutton"
+            android:background="@drawable/pencilicon"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
@@ -78,7 +73,8 @@
         android:layout_width="match_parent"
         android:layout_height="71dp"
         android:layout_above="@+id/linearLayout5"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayout">
 
         <ImageButton
             android:layout_width="61dp"
@@ -86,6 +82,32 @@
             android:id="@+id/camerabutton"
             android:background="@drawable/cameraicon"
             android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linearLayout"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"></LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="The Moment"
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textSize="50dp" />
     </LinearLayout>
 
 </RelativeLayout>

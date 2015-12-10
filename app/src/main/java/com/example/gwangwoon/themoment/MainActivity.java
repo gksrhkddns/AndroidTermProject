@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,8 +41,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private Intent i;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+      //  requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
 
         ImageButton cameraButton =(ImageButton) findViewById(R.id.camerabutton);
         cameraButton.setOnClickListener(this);
@@ -49,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         videoButton.setOnClickListener(this);
         ImageButton pencilButton =(ImageButton) findViewById(R.id.pencilbutton);
         pencilButton.setOnClickListener(this);
-        ImageButton recordingButton =(ImageButton) findViewById(R.id.recordingbutton);
+
         ImageButton menuButton = (ImageButton)findViewById(R.id.menubutton);
         menuButton.setOnClickListener(this);
         //cameraButton.setOnClickListener(this);
@@ -168,15 +173,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             }
         }
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-
+*/
+/*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -192,5 +197,5 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
-
+*/
 }

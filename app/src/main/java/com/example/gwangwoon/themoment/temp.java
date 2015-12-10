@@ -1,180 +1,247 @@
 package com.example.gwangwoon.themoment;
 import java.io.File;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.*;
+
+import static android.provider.BaseColumns._ID;
+import static com.example.gwangwoon.themoment.Constants.DIRECTORY;
+import static com.example.gwangwoon.themoment.Constants.MEMO;
+import static com.example.gwangwoon.themoment.Constants.PHOTO;
+import static com.example.gwangwoon.themoment.Constants.TABLE_NAME;
+import static com.example.gwangwoon.themoment.Constants.TIME;
+import static com.example.gwangwoon.themoment.Constants.TITLE;
 
 public class temp extends Activity implements OnClickListener
 {
-    private static final int PICK_FROM_CAMERA = 0;
-    private static final int PICK_FROM_ALBUM = 1;
-    private static final int CROP_FROM_CAMERA = 2;
+    private EventsData events;
+    private VideoData videdData;
+    private ArrayList<String> items = null;
+    private ArrayAdapter<String> myAdapter = null;
+    private ImageButton leftButton;
+    private static String[]  FROM = {_ID, TIME, TITLE, PHOTO, MEMO};
+    private static String ORDER_BY = TIME + " DESC";
+    private ListView lv;
+    private static String[] video_FROM = {_ID, TIME, TITLE, DIRECTORY, MEMO};
 
-    private Uri mImageCaptureUri;
-    private ImageView mPhotoImageView;
-    private Button mButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.camera);
+        setContentView(R.layout.search);
+        android.widget.SearchView searchView = (android.widget.SearchView) findViewById(R.id.searchView);
 
-      //  mButton = (Button) findViewById(R.id.button);
-        mPhotoImageView = (ImageView) findViewById(R.id.image);
+        events = new EventsData(this);
+        videdData = new VideoData(this);
+        String temp = null;
 
-        mButton.setOnClickListener(this);
-        doTakePhotoAction();
-    }
+        final Cursor cursor = getEvents();
+        final Cursor videoCursor = getVideoData();
 
-    /**
-     * 카메라에서 이미지 가져오기
-     */
-    private void doTakePhotoAction()
-    {
-    /*
-     * 참고 해볼곳
-     * http://2009.hfoss.org/Tutorial:Camera_and_Gallery_Demo
-     * http://stackoverflow.com/questions/1050297/how-to-get-the-url-of-the-captured-image
-     * http://www.damonkohler.com/2009/02/android-recipes.html
-     * http://www.firstclown.us/tag/android/
-     */
+        items = new ArrayList<String>();
+       lv = (ListView) findViewById(R.id.listView_search);
 
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        leftButton = (ImageButton) findViewById(R.id.leftButton_search);
+        leftButton.setOnClickListener(this);
 
-        // 임시로 사용할 파일의 경로를 생성
-        String url = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
-        mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), url));
+        searchView.setIconified(false);
+        searchView.setQueryHint("제목을 입력하세요");
 
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-        // 특정기기에서 사진을 저장못하는 문제가 있어 다음을 주석처리 합니다.
-        //intent.putExtra("return-data", true);
-        startActivityForResult(intent, PICK_FROM_CAMERA);
 
-    }
+        searchView.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
 
-    /**
-     * 앨범에서 이미지 가져오기
-     */
-    private void doTakeAlbumAction()
-    {
-        // 앨범 호출
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-        startActivityForResult(intent, PICK_FROM_ALBUM);
-    }
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // TODO Auto-generated method stub
+                Log.d("출력", query);
+                String title = String.valueOf(query);
+                showTitle(cursor, videoCursor, title);
+                Toast.makeText(getBaseContext(), query,
+                        Toast.LENGTH_SHORT).show();
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if(resultCode != RESULT_OK)
-        {
-            return;
-        }
+                return false;
+            }
 
-        switch(requestCode)
-        {
-            case CROP_FROM_CAMERA:
-            {
-                // 크롭이 된 이후의 이미지를 넘겨 받습니다.
-                // 이미지뷰에 이미지를 보여준다거나 부가적인 작업 이후에
-                // 임시 파일을 삭제합니다.
-                final Bundle extras = data.getExtras();
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TODO Auto-generated method stub
 
-                if(extras != null)
-                {
+                //	Toast.makeText(getBaseContext(), newText,
+                //    Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
 
-                    Bitmap photo = extras.getParcelable("data");
-                    mPhotoImageView.setImageBitmap(photo);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent;
+                int size = myAdapter.getItem(position).length();
+                String strDate = myAdapter.getItem(position).substring(size - 16, size-6);
+                Toast.makeText(temp.this,strDate, Toast.LENGTH_SHORT).show();
+                String title = myAdapter.getItem(position).substring(0, size - 19);
+
+                byte[] drawableIconByteArray = null;
+                String tStrDate;
+                String tTitle;
+                Cursor cursor = getEvents();
+                String temp;
+                Cursor videoCursor = getVideoData();
+
+                while (cursor.moveToNext()) {
+                    tStrDate = cursor.getString(1);
+                    tTitle = cursor.getString(2);
+                    drawableIconByteArray = cursor.getBlob(3);
+                    temp = strDate.substring(0, 10);
+
+                    if(temp.equals(strDate)){
+                        if(tTitle.equals(title)){
+                            Log.d("날짜",  temp + " / " + strDate );
+                            if(drawableIconByteArray != null) {
+                                intent = new Intent(temp.this, Show.class);
+
+                                intent.putExtra("date", temp);
+                                intent.putExtra("title",title);
+                                startActivity(intent);
+                            }
+                            else{
+                                intent = new Intent(temp.this, Pencilshow.class);
+
+                                intent.putExtra("date", temp);
+                                intent.putExtra("title",title);
+                                startActivity(intent);
+                            }
+                        }
+
+                    }
+
                 }
 
-                // 임시 파일 삭제
-                File f = new File(mImageCaptureUri.getPath());
-                if(f.exists())
-                {
-                    f.delete();
+                while (videoCursor.moveToNext()) {
+
+                    tStrDate = videoCursor.getString(1);
+                    tTitle = videoCursor.getString(2);
+                    temp = strDate.substring(0, 10);
+                    if (temp.equals(strDate)) {
+                        if (tTitle.equals(title)) {
+                            intent = new Intent(temp.this, VideoShow.class);
+                            intent.putExtra("date", temp);
+                            intent.putExtra("title", tTitle);
+                            startActivity(intent);
+                        }
+
+                    }
                 }
 
-                break;
+
             }
+        });
 
-            case PICK_FROM_ALBUM:
-            {
-                // 이후의 처리가 카메라와 같으므로 일단  break없이 진행합니다.
-                // 실제 코드에서는 좀더 합리적인 방법을 선택하시기 바랍니다.
-
-                mImageCaptureUri = data.getData();
-            }
-
-            case PICK_FROM_CAMERA:
-            {
-                // 이미지를 가져온 이후의 리사이즈할 이미지 크기를 결정합니다.
-                // 이후에 이미지 크롭 어플리케이션을 호출하게 됩니다.
-
-                Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setDataAndType(mImageCaptureUri, "image/*");
-
-                intent.putExtra("outputX", 90);
-                intent.putExtra("outputY", 90);
-                intent.putExtra("aspectX", 1);
-                intent.putExtra("aspectY", 1);
-                intent.putExtra("scale", true);
-                intent.putExtra("return-data", true);
-                startActivityForResult(intent, CROP_FROM_CAMERA);
-
-                break;
-            }
-        }
     }
 
-    @Override
-    public void onClick(View v)
-    {
-        /*
-        DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                doTakePhotoAction();
-            }
-        };
+    public void onClick(View v){
 
-        DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                doTakeAlbumAction();
-            }
-        };
+        switch(v.getId()) {
+            case R.id.leftButton_search:
+                finish();
+                break;
 
-        DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-            }
-        };
+        }
+    }
+    private Cursor getEvents(){
+        //관리된 질의 실행하기. 필요하면 액티비티가 종료와
+        //결과 묶음을 다시 질의하는 작업을 처리할 것이다.
+        //(perform a managed query. The Activity will handle closing)
+        //(and re_querying the cursor when needed.)
+        SQLiteDatabase db = events.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, FROM, null, null, null, null, ORDER_BY);
+        startManagingCursor(cursor);
+        return cursor;
 
-        new AlertDialog.Builder(this)
-                .setTitle("업로드할 이미지 선택")
-                .setPositiveButton("사진촬영", cameraListener)
-                .setNeutralButton("앨범선택", albumListener)
-                .setNegativeButton("취소", cancelListener)
-                .show();
-                */
-    }}
+    }
+
+    private Cursor getVideoData(){
+        //관리된 질의 실행하기. 필요하면 액티비티가 종료와
+        //결과 묶음을 다시 질의하는 작업을 처리할 것이다.
+        //(perform a managed query. The Activity will handle closing)
+        //(and re_querying the cursor when needed.)
+        SQLiteDatabase db = videdData.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, video_FROM, null, null, null, null, ORDER_BY);
+        startManagingCursor(cursor);
+        return cursor;
+
+    }
+
+    private void showTitle(Cursor cursor, Cursor videoCursor, String title){
+
+
+        int i = 0;
+        String temp;
+        String mtitle;
+        // Intent intent = getIntent();
+        String  strDate;
+        cursor = getEvents();
+        videoCursor = getVideoData();
+        items = new ArrayList<String>();
+        //   selectedDate = intent.getStringExtra("date");
+        while(   cursor.moveToNext()) {
+
+           strDate = cursor.getString(1);
+            mtitle = cursor.getString(2);
+
+
+            if(title.equals(mtitle)){
+                items.add(title + " - " + strDate);
+                Log.d("안됨?", title);
+
+            }
+        }
+
+        while(   videoCursor.moveToNext()) {
+
+            strDate = videoCursor.getString(1);
+            mtitle = videoCursor.getString(2);
+
+
+            if(title.equals(mtitle)){
+                items.add(title + " - " + strDate );
+                Log.d("안됨?1", title);
+            }
+        }
+
+
+        if(items.size() == 0){
+            Toast.makeText(temp.this, "글이 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
+
+        }
+
+        else {
+
+            myAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_expandable_list_item_1,
+                    items);
+
+            lv.setAdapter(myAdapter);
+        }
+
+    }
+
+
+
+}

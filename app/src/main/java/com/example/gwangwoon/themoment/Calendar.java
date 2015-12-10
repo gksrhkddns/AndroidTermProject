@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,11 +92,35 @@ public class Calendar extends Activity implements View.OnClickListener {
                 alertDialog.show();
                 break;
             case R.id.searchbutton_calendar:
-                Intent intent = new Intent(this, SearchView.class);
+              Log.d("왓다","왓다");
+              Intent intent = new Intent(this, temp.class);
                 startActivity(intent);
                 break;
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                System.out.println(s);
+                return false;
+            }
+        });
+        return true;
+    }
+/*
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,5 +144,5 @@ public class Calendar extends Activity implements View.OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
-
+*/
 }

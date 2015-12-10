@@ -3,6 +3,25 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="#050505"
+        android:weightSum="1">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="46dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.63"></LinearLayout>
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="25dp"
+            android:id="@+id/leftButton_listactivity"
+            android:background="@drawable/leftarrow"/>
+    </LinearLayout>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
